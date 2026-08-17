@@ -1,0 +1,20 @@
+import PageBreadcrumb from '@/components/PageBreadcrumb'
+import { Metadata } from 'next'
+import { Row } from 'react-bootstrap'
+import TextEditors from './components/TextEditors'
+
+export const metadata: Metadata = { title: `Editors` }
+
+const Page = () => {
+  return (
+    <>
+      <PageBreadcrumb title="Text Editors" subtitle="Forms" />
+
+      <Row>
+        <TextEditors />
+      </Row>
+    </>
+  )
+}
+
+export default Page

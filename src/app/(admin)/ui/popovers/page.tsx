@@ -1,0 +1,28 @@
+import PageBreadcrumb from '@/components/PageBreadcrumb'
+import { Metadata } from 'next'
+import { Col, Row } from 'react-bootstrap'
+import { CustomPopovers, DisabledPopover, DismissOnPopover, FourDirections, HoverPopovers, SimplePopover } from './components/PopOver'
+
+export const metadata: Metadata = { title: 'Popovers' }
+
+const Page = () => {
+  return (
+    <>
+      <PageBreadcrumb title="Popovers" subtitle="UI" />
+      <Row>
+        <Col xl={6}>
+          <SimplePopover />
+          <HoverPopovers />
+          <CustomPopovers />
+        </Col>
+        <Col xl={6}>
+          <DismissOnPopover />
+          <FourDirections />
+          <DisabledPopover />
+        </Col>
+      </Row>
+    </>
+  )
+}
+
+export default Page

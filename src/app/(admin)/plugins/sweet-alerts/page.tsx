@@ -1,0 +1,21 @@
+import PageBreadcrumb from '@/components/PageBreadcrumb'
+import { Metadata } from 'next'
+import { Col, Row } from 'react-bootstrap'
+import SweetAlerts from './components/SweetAlerts'
+
+export const metadata: Metadata = { title: 'SweetAlert2' }
+
+const Page = () => {
+  return (
+    <>
+      <PageBreadcrumb title="SweetAlert2" subtitle="Plugins" />
+      <Row className="justify-content-center">
+        <Col xs={12}>
+          <SweetAlerts />
+        </Col>
+      </Row>
+    </>
+  )
+}
+
+export default Page
