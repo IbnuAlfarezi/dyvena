@@ -7,13 +7,14 @@ import React, { useEffect } from 'react'
 
 const AppProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
+  const { isAuthenticated, loading } = useAuth()
 
-  const { isAuthenticated } = useAuth()
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!loading && !isAuthenticated) {
       router.replace('/auth/card/sign-in')
     }
-  }, [])
+  }, [isAuthenticated, loading])
+
   return (
     <LayoutProvider>
       <NotificationProvider>{children}</NotificationProvider>

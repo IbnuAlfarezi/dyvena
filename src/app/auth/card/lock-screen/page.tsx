@@ -33,10 +33,6 @@ const Page = () => {
                         <h4 className="fw-bold mt-4">Lock Screen!</h4>
                         <p className="text-muted w-lg-75 mx-auto">This screen is locked. Enter your password to continue.</p>
                       </div>
-                      <div className="text-center mb-4">
-                        <Image src={user1} className="rounded-circle img-thumbnail avatar-xxl mb-2" alt="thumbnail" />
-                        <h5 className="fs-md">{META_DATA.username}</h5>
-                      </div>
                       <Forms />
                       <p className="text-muted text-center mt-4 mb-0">
                         Not you? Return to&nbsp;

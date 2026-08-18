@@ -50,3 +50,4 @@ bun-debug.log*
 
 # exception for env examples
 !.env.example
+.agents

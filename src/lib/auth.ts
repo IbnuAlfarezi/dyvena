@@ -2,12 +2,9 @@ import { betterAuth } from "better-auth";
 import { organization, createAccessControl } from "better-auth/plugins";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { db } from "@/db";
+import * as schema from "@/db/schema";
+import { sendEmail } from "@/lib/mailer";
 
-// ---------------------------------------------------------------------------
-// Permission statement — define ALL resources and their possible actions here.
-// Never check authorization against a role name directly; always use these
-// permission strings so that roles can be changed without touching app logic.
-// ---------------------------------------------------------------------------
 const statement = {
   project: ["create", "read", "update", "delete"] as const,
   billing: ["read", "manage"] as const,
@@ -17,17 +14,11 @@ const statement = {
 
 const ac = createAccessControl(statement);
 
-// ---------------------------------------------------------------------------
-// Roles — permission sets only, no role-name checks in business logic.
-// ---------------------------------------------------------------------------
-
-/** Read-only access to org projects and settings. */
 const member = ac.newRole({
   project: ["read"],
   settings: ["read"],
 });
 
-/** Can create/update projects, invite members, read billing. */
 const admin = ac.newRole({
   project: ["create", "read", "update"],
   billing: ["read"],
@@ -35,27 +26,45 @@ const admin = ac.newRole({
   settings: ["read", "update"],
 });
 
-/** Full access including destructive actions. */
 const owner = ac.newRole({
   project: ["create", "read", "update", "delete"],
   billing: ["read", "manage"],
   member: ["invite", "remove", "update-role"],
   settings: ["read", "update"],
 });
-
-// ---------------------------------------------------------------------------
-// Better Auth instance
-// ---------------------------------------------------------------------------
 export const auth = betterAuth({
-  database: drizzleAdapter(db, { provider: "pg" }),
+  database: drizzleAdapter(db, { provider: "pg", schema }),
 
-  emailAndPassword: { enabled: true },
+  emailAndPassword: {
+    enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      await sendEmail({
+        to: user.email,
+        subject: "Reset your Dyvena password",
+        html: `
+          <p>Hi ${user.name ?? user.email},</p>
+          <p>Click the link below to reset your password. This link expires in 1 hour.</p>
+          <p><a href="${url}" style="background:#4f46e5;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;">Reset Password</a></p>
+          <p>If you didn't request this, you can safely ignore this email.</p>
+        `,
+      });
+    },
+  },
 
-  /**
-   * Rate limiting — uses the database by default (valid for single-server
-   * deployments). Switch storage to "secondary-storage" + add Redis when
-   * running multiple instances or on serverless (see plan §12).
-   */
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendEmail({
+        to: user.email,
+        subject: "Verify your Dyvena email address",
+        html: `
+          <p>Hi ${user.name ?? user.email},</p>
+          <p>Click the link below to verify your email address.</p>
+          <p><a href="${url}" style="background:#4f46e5;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;">Verify Email</a></p>
+        `,
+      });
+    },
+  },
+
   rateLimit: {
     enabled: true,
     storage: "database",
@@ -70,6 +79,4 @@ export const auth = betterAuth({
   ],
 });
 
-// Re-export the AC instance so DAL and server actions can use
-// `ac.check(...)` without importing the whole auth object.
 export { ac };

@@ -5,6 +5,7 @@ import AuthLogo from '@/components/AuthLogo'
 import { currentYear, META_DATA } from '@/config/constants'
 import { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button, Card, CardBody, Col, Container, Form, Row } from 'react-bootstrap'
 
 export const metadata: Metadata = { title: 'Success Mail' }
@@ -39,9 +40,9 @@ const Page = () => {
                         </div>
                         <h4 className="fw-bold text-center mb-4">Well Done! Email verified Successfully</h4>
                         <div className="d-grid">
-                          <Button variant="primary" type="submit" className="fw-semibold py-2">
-                            Back to Dashboard
-                          </Button>
+                          <Link href="/auth/card/sign-in" className="btn btn-primary fw-semibold py-2">
+                            Back to Login
+                          </Link>
                         </div>
                       </Form>
                       <p className="text-center text-muted mt-4 mb-0">
