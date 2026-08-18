@@ -137,7 +137,7 @@ const Forms = () => {
 
       <div className="mb-3 d-flex justify-content-center">
         <Turnstile
-          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} // dummy key for testing if not set
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''}
           onSuccess={(token) => setTurnstileToken(token)}
           options={{ theme: 'light' }}
         />

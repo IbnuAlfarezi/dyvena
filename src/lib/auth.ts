@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { organization, createAccessControl } from "better-auth/plugins";
 import { emailOTP } from "better-auth/plugins/email-otp";
+import { admin as adminPlugin } from "better-auth/plugins/admin";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
@@ -184,9 +185,10 @@ export const auth = betterAuth({
   plugins: [
     organization({
       ac,
-      roles: { member, admin, owner },
+      roles: { member, admin: ac.newRole({}), owner }, // The global admin is different from organization admin
       teams: { enabled: true },
     }),
+    adminPlugin(),
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {
         let subject = "Your Dyvena Verification Code";

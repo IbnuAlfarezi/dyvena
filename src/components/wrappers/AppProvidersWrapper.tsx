@@ -10,9 +10,9 @@ const AppProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, loading } = useAuth()
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.replace('/auth/card/sign-in')
-    }
+    // Client-side authentication redirects should NOT happen globally.
+    // The Edge Middleware (src/proxy.ts) already protects the /dashboard routes.
+    // Aggressive global redirects here block public routes like /sign-up and /forget-password.
   }, [isAuthenticated, loading])
 
   return (

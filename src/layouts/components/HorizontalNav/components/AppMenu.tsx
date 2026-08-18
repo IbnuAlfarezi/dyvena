@@ -1,6 +1,7 @@
 import Icon from '@/components/wrappers/Icon'
 import { menuItems } from '@/layouts/components/data'
 import type { MenuItemType } from '@/types'
+import { useAuth } from '@/hooks/useAuth'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -82,9 +83,17 @@ const MenuItem = ({ item, linkClass, wrapperClass, level }: { item: MenuItemType
 }
 
 const AppMenu = () => {
+  const { session } = useAuth()
+  
+  const isAdmin = (session?.user as any)?.role === 'admin'
+  const filteredMenuItems = menuItems.filter(item => {
+    if (isAdmin) return true
+    return !['Custom Pages', 'Components', 'Menu Items', 'Layouts'].includes(item.label)
+  })
+
   return (
     <ul className="navbar-nav">
-      {menuItems.map((item, idx) => (
+      {filteredMenuItems.map((item, idx) => (
         <Fragment key={idx}>{item.children ? <MenuItemWithChildren item={item} wrapperClass="nav-item" togglerClass="nav-link" /> : <MenuItem item={item} linkClass="nav-link" wrapperClass="nav-item" />}</Fragment>
       ))}
     </ul>

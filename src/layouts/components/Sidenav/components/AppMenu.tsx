@@ -2,6 +2,7 @@ import Icon from '@/components/wrappers/Icon'
 import { menuItems } from '@/layouts/components/data'
 import type { MenuItemType } from '@/types'
 import { scrollToElement } from '@/utils/layout'
+import { useAuth } from '@/hooks/useAuth'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -90,6 +91,14 @@ const MenuItem = ({ item, level = 0 }: { item: MenuItemType; level?: number }) =
 
 const AppMenu = () => {
   const [openMenuKey, setOpenMenuKey] = useState<string | null>(null)
+  const { session } = useAuth()
+  
+  const isAdmin = (session?.user as any)?.role === 'admin'
+  const filteredMenuItems = menuItems.filter(item => {
+    if (isAdmin) return true
+    return !['Custom Pages', 'Components', 'Menu Items', 'Layouts'].includes(item.label)
+  })
+
   const scrollToActiveLink = () => {
     const activeItem: HTMLAnchorElement | null = document.querySelector('.side-nav-link.active')
     if (activeItem) {
@@ -106,7 +115,7 @@ const AppMenu = () => {
 
   return (
     <ul className="side-nav">
-      {menuItems.map((item, idx) => (
+      {filteredMenuItems.map((item, idx) => (
         <Fragment key={idx}>
           {item.isTitle && <li className="side-nav-title mt-2">{item.label}</li>}
           {(item.children || [item]).map((item, idx) => (
