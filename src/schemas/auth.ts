@@ -31,8 +31,15 @@ export const forgotPasswordSchema = z.object({
 
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
 
+export const verifyEmailSchema = z.object({
+  otp: z.string().length(6, 'OTP harus 6 digit'),
+})
+
+export type VerifyEmailFormValues = z.infer<typeof verifyEmailSchema>
+
 export const resetPasswordSchema = z
   .object({
+    otp: z.string().length(6, 'OTP harus 6 digit'),
     password: z.string().min(8, 'Password minimal 8 karakter'),
     confirmPassword: z.string().min(1, 'Konfirmasi password harus diisi'),
   })

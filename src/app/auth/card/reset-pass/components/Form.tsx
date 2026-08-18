@@ -4,6 +4,7 @@ import Icon from '@/components/wrappers/Icon'
 import { authClient } from '@/lib/auth-client'
 import { ForgotPasswordFormValues, forgotPasswordSchema } from '@/schemas/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Turnstile } from '@marsidev/react-turnstile'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Alert, Button, Form, FormControl, FormLabel, InputGroup, Spinner } from 'react-bootstrap'
@@ -13,6 +14,7 @@ const ResetForm = () => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [turnstileToken, setTurnstileToken] = useState<string>('')
 
   const {
     register,
@@ -28,10 +30,12 @@ const ResetForm = () => {
       setLoading(true)
       setError(null)
 
-      // @ts-expect-error Better Auth forgetPassword is valid at runtime but TS doesn't infer it without inferServerPlugin
-      const res = await authClient.forgetPassword({
+      // Request an OTP for password reset
+      const res = await authClient.emailOtp.requestPasswordReset({
         email: data.email,
-        redirectTo: '/auth/card/new-pass',
+        fetchOptions: {
+          headers: turnstileToken ? { 'x-turnstile-token': turnstileToken } : undefined
+        }
       })
 
       if (res.error) {
@@ -39,7 +43,7 @@ const ResetForm = () => {
         return
       }
 
-      router.push('/auth/card/success-mail')
+      router.push(`/auth/card/new-pass?email=${encodeURIComponent(data.email)}`)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')
     } finally {
@@ -61,20 +65,27 @@ const ResetForm = () => {
           <span className="text-danger">&nbsp;*</span>
         </FormLabel>
         <div className="app-search">
-          <InputGroup>
-            <FormControl
-              type="email"
-              id="userEmail"
-              placeholder="you@example.com"
-              isInvalid={!!errors.email}
-              disabled={loading}
-              {...register('email')}
-            />
-            <Icon icon="mail" className="app-search-icon text-muted" />
-            <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
-          </InputGroup>
+          <FormControl
+            type="email"
+            id="userEmail"
+            placeholder="you@example.com"
+            isInvalid={!!errors.email}
+            disabled={loading}
+            {...register('email')}
+          />
+          <Icon icon="mail" className="app-search-icon text-muted" />
+          <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
         </div>
       </div>
+
+      <div className="mb-3 d-flex justify-content-center">
+        <Turnstile
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+          onSuccess={(token) => setTurnstileToken(token)}
+          options={{ theme: 'light' }}
+        />
+      </div>
+
       <div className="d-grid">
         <Button variant="primary" type="submit" className="fw-semibold py-2" disabled={loading}>
           {loading ? (

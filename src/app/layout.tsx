@@ -1,9 +1,16 @@
 import favicon from '@/assets/images/favicon.ico'
 import AppProvidersWrapper from '@/components/wrappers/AppProvidersWrapper'
 import { META_DATA } from '@/config/constants'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 
 import '@/assets/scss/app.scss'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
 
 export const metadata: Metadata = {
   title: {

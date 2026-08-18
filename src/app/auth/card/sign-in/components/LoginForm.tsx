@@ -41,20 +41,18 @@ const LoginForm = () => {
           Email address
           <span className="text-danger">&nbsp;*</span>
         </FormLabel>
-        <span className="app-search">
-          <InputGroup>
-            <FormControl
-              type="email"
-              id="loginEmail"
-              placeholder="you@example.com"
-              isInvalid={!!errors.email}
-              disabled={loading}
-              {...register('email')}
-            />
-            <Icon icon="mail" className="app-search-icon text-muted" />
-            <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
-          </InputGroup>
-        </span>
+        <div className="app-search">
+          <FormControl
+            type="email"
+            id="loginEmail"
+            placeholder="you@example.com"
+            isInvalid={!!errors.email}
+            disabled={loading}
+            {...register('email')}
+          />
+          <Icon icon="mail" className="app-search-icon text-muted" />
+          <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
+        </div>
       </div>
 
       <div className="mb-3">

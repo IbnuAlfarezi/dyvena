@@ -18,7 +18,7 @@ interface SendEmailOptions {
 
 export async function sendEmail({ to, subject, html }: SendEmailOptions) {
   await transporter.sendMail({
-    from: process.env.SMTP_FROM ?? "noreply@dyvena.app",
+    from: process.env.SMTP_FROM ?? "noreply@ibnualfarezi.my.id",
     to,
     subject,
     html,

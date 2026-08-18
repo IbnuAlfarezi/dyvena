@@ -13,13 +13,15 @@ import type { NextRequest } from "next/server";
  * Verify this matches your Better Auth version — run the app and check
  * Application → Cookies in DevTools if you upgrade the library.
  */
-export function proxy(request: NextRequest) {
-  const sessionCookie = request.cookies.get("better-auth.session_token");
+export async function proxy(request: NextRequest) {
+  const path = request.nextUrl.pathname;
 
-  if (!sessionCookie && request.nextUrl.pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(
-      new URL("/auth/card/sign-in", request.url)
-    );
+  // 1. Authentication Proxy for Dashboard
+  if (path.startsWith("/dashboard")) {
+    const sessionCookie = request.cookies.get("better-auth.session_token");
+    if (!sessionCookie) {
+      return NextResponse.redirect(new URL("/auth/card/sign-in", request.url));
+    }
   }
 
   return NextResponse.next();

@@ -32,19 +32,26 @@ export const useAuth = () => {
     }
   }
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name: string, email: string, password: string, turnstileToken?: string) => {
     try {
       setLoading(true)
       setError(null)
 
-      const res = await authClient.signUp.email({ name, email, password })
+      const res = await authClient.signUp.email({ 
+        name, 
+        email, 
+        password,
+        fetchOptions: {
+          headers: turnstileToken ? { 'x-turnstile-token': turnstileToken } : undefined
+        }
+      })
 
       if (res.error) {
         setError(res.error.message ?? 'Registration failed')
         return
       }
 
-      router.replace('/')
+      router.replace(`/auth/card/verify-email?email=${encodeURIComponent(email)}`)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')
     } finally {

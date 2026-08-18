@@ -13,7 +13,7 @@ import { Controller, useForm } from 'react-hook-form'
 const NewPassFormContent = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const token = searchParams.get('token') || ''
+  const email = searchParams.get('email')
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -25,12 +25,12 @@ const NewPassFormContent = () => {
     formState: { errors },
   } = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
-    defaultValues: { password: '', confirmPassword: '' },
+    defaultValues: { otp: '', password: '', confirmPassword: '' },
   })
 
   const onSubmit = async (data: ResetPasswordFormValues) => {
-    if (!token) {
-      setError('Invalid or missing reset token.')
+    if (!email) {
+      setError('Invalid or missing email address.')
       return
     }
 
@@ -38,7 +38,7 @@ const NewPassFormContent = () => {
       setLoading(true)
       setError(null)
 
-      const res = await authClient.resetPassword({ newPassword: data.password, token })
+      const res = await authClient.emailOtp.resetPassword({ email, otp: data.otp, password: data.password })
 
       if (res.error) {
         setError(res.error.message ?? 'Failed to reset password')
@@ -61,11 +61,31 @@ const NewPassFormContent = () => {
         </Alert>
       )}
 
-      {!token && (
+      {!email && (
         <Alert variant="warning" className="py-2 px-3 fs-14">
-          Missing reset token in URL. Please click the link in your email again.
+          Missing email in URL. Please start the password reset process again.
         </Alert>
       )}
+
+      <div className="mb-3">
+        <FormLabel>
+          Reset Code (OTP)
+          <span className="text-danger">&nbsp;*</span>
+        </FormLabel>
+        <div className="app-search">
+          <FormControl
+            type="text"
+            id="otp"
+            placeholder="123456"
+            maxLength={6}
+            isInvalid={!!errors.otp}
+            disabled={loading}
+            {...register('otp')}
+          />
+          <Icon icon="key" className="app-search-icon text-muted" />
+          <Form.Control.Feedback type="invalid">{errors.otp?.message}</Form.Control.Feedback>
+        </div>
+      </div>
 
       <div className="mb-3" data-password="bar">
         <Controller
@@ -107,7 +127,7 @@ const NewPassFormContent = () => {
       </div>
 
       <div className="d-grid">
-        <Button variant="primary" type="submit" className="fw-semibold py-2" disabled={loading || !token}>
+        <Button variant="primary" type="submit" className="fw-semibold py-2" disabled={loading || !email}>
           {loading ? (
             <>
               <Spinner as="span" animation="border" size="sm" className="me-2" />

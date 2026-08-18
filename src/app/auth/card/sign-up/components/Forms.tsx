@@ -6,11 +6,14 @@ import { META_DATA } from '@/config/constants'
 import { useAuth } from '@/hooks/useAuth'
 import { SignUpFormValues, signUpSchema } from '@/schemas/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Turnstile } from '@marsidev/react-turnstile'
+import { useState } from 'react'
 import { Alert, Button, Form, FormCheck, FormControl, FormLabel, Spinner } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
 
 const Forms = () => {
   const { register: registerAuth, loading, error } = useAuth()
+  const [turnstileToken, setTurnstileToken] = useState<string>('')
 
   const {
     register,
@@ -29,7 +32,7 @@ const Forms = () => {
   })
 
   const onSubmit = async (data: SignUpFormValues) => {
-    await registerAuth(data.name, data.email, data.password)
+    await registerAuth(data.name, data.email, data.password, turnstileToken)
   }
 
   return (
@@ -130,6 +133,14 @@ const Forms = () => {
           <FormCheck.Label htmlFor="termAndPolicy">Agree the Terms &amp; Policy</FormCheck.Label>
           {errors.termsAccepted && <div className="text-danger fs-14 mt-1">{errors.termsAccepted.message}</div>}
         </FormCheck>
+      </div>
+
+      <div className="mb-3 d-flex justify-content-center">
+        <Turnstile
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} // dummy key for testing if not set
+          onSuccess={(token) => setTurnstileToken(token)}
+          options={{ theme: 'light' }}
+        />
       </div>
 
       <div className="d-grid">
