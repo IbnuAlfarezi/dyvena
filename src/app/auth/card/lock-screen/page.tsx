@@ -1,6 +1,5 @@
 import authcard from '@/assets/images/auth-card-bg.svg'
 import auth from '@/assets/images/auth.jpg'
-import user1 from '@/assets/images/users/user-1.jpg'
 import AuthLogo from '@/components/AuthLogo'
 import { currentYear, META_DATA } from '@/config/constants'
 import { Metadata } from 'next'

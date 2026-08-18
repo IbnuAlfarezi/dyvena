@@ -59,13 +59,8 @@ const Customizer = () => {
         <SidenavUser />
       </SimpleBar>
       <div className="offcanvas-footer border-top p-3 text-center">
-        <Row className="justify-content-end">
-          <Col xs={6}>
-            <a href={META_DATA.buyUrl} target="_blank" rel="noopener noreferrer" className="btn btn-success fw-semibold py-2 w-100">
-              <Icon icon="basket" className="me-2 fs-md" /> Buy Now
-            </a>
-          </Col>
-          <Col xs={6}>
+        <Row>
+          <Col xs={12}>
             <Button onClick={reset} variant="danger" type="button" className="fw-semibold py-2 w-100" id="reset-layout">
               <Icon icon="refresh" className="me-2 fs-md" /> Reset
             </Button>

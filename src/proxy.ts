@@ -1,13 +1,20 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if (path.startsWith("/dashboard")) {
-    const sessionCookie = request.cookies.get("better-auth.session_token");
-    if (!sessionCookie) {
-      return NextResponse.redirect(new URL("/auth/card/sign-in", request.url));
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
+    
+    if (!session) {
+      const signInUrl = new URL("/auth/card/sign-in", request.url);
+      signInUrl.searchParams.set("callbackUrl", path);
+      return NextResponse.redirect(signInUrl);
     }
   }
 
@@ -15,5 +22,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
+  runtime: "nodejs",
   matcher: ["/dashboard/:path*"],
 };

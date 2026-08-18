@@ -5,6 +5,8 @@ import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 
+import { AuthStoreProvider } from '@/providers/AuthProvider'
+
 const AppProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
   const { isAuthenticated, loading } = useAuth()
@@ -16,9 +18,11 @@ const AppProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
   }, [isAuthenticated, loading])
 
   return (
-    <LayoutProvider>
-      <NotificationProvider>{children}</NotificationProvider>
-    </LayoutProvider>
+    <AuthStoreProvider>
+      <LayoutProvider>
+        <NotificationProvider>{children}</NotificationProvider>
+      </LayoutProvider>
+    </AuthStoreProvider>
   )
 }
 

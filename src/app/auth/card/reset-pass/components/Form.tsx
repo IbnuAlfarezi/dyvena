@@ -30,7 +30,6 @@ const ResetForm = () => {
       setLoading(true)
       setError(null)
 
-      // Request an OTP for password reset
       const res = await authClient.emailOtp.requestPasswordReset({
         email: data.email,
         fetchOptions: {
@@ -39,7 +38,6 @@ const ResetForm = () => {
       })
 
       if (res.error) {
-        // Prevent User Enumeration: if user is not found, pretend it succeeded
         const isNotFound = res.error.status === 404 || res.error.message?.toLowerCase().includes('not found')
         if (isNotFound) {
           router.push(`/auth/card/new-pass?email=${encodeURIComponent(data.email)}`)

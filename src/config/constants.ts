@@ -1,12 +1,11 @@
 export const META_DATA = {
-  name: 'Paces',
-  title: 'Paces - Multipurpose Tailwind CSS & Bootstrap Admin Dashboard Template',
-  description: 'Paces is a modern, responsive admin dashboard available on ThemeForest. Ideal for building CRM, CMS, project management tools, and custom web applications with a clean UI, flexible layouts, and rich features.',
-  author: 'Coderthemes',
-  username: 'David Dev',
-  keywords: 'Paces, admin dashboard, ThemeForest, Bootstrap 5 admin, responsive admin, CRM dashboard, CMS admin, web app UI, admin theme, premium admin template',
-  version: '1.5.0',
-  buyUrl: 'https://1.envato.market/paces',
-}
+  name: 'Dyvena',
+  title: 'Dyvena - The dynamic vein of your business processes',
+  description: 'Dyvena is a powerful low-code platform for business process management (BPM) and workflow automation. Streamline approvals, build custom apps, and manage your digital workplace effortlessly.',
+  author: 'Ibnu Al Farezi',
+  username: 'Ibnu Al Farezi',
+  keywords: 'Dyvena, business process management, BPM, workflow automation, low-code platform, no-code, digital workplace, custom business apps, form builder, enterprise software',
+  version: '1.0.0',
+};
 
-export const currentYear = new Date().getFullYear()
+export const currentYear = new Date().getFullYear();
