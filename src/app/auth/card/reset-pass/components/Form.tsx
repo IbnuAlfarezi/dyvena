@@ -39,6 +39,12 @@ const ResetForm = () => {
       })
 
       if (res.error) {
+        // Prevent User Enumeration: if user is not found, pretend it succeeded
+        const isNotFound = res.error.status === 404 || res.error.message?.toLowerCase().includes('not found')
+        if (isNotFound) {
+          router.push(`/auth/card/new-pass?email=${encodeURIComponent(data.email)}`)
+          return
+        }
         setError(res.error.message ?? 'Failed to send reset request')
         return
       }

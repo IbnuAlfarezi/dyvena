@@ -1,3 +1,5 @@
+'use client'
+
 import Icon from '@/components/wrappers/Icon'
 import { menuItems } from '@/layouts/components/data'
 import type { MenuItemType } from '@/types'
@@ -93,7 +95,7 @@ const AppMenu = () => {
   const [openMenuKey, setOpenMenuKey] = useState<string | null>(null)
   const { session } = useAuth()
   
-  const isAdmin = (session?.user as any)?.role === 'admin'
+  const isAdmin = session?.user?.role === 'admin'
   const filteredMenuItems = menuItems.filter(item => {
     if (isAdmin) return true
     return !['Custom Pages', 'Components', 'Menu Items', 'Layouts'].includes(item.label)

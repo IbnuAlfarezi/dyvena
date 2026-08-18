@@ -1,3 +1,5 @@
+'use client'
+
 import User1 from '@/assets/images/users/user-1.jpg'
 import Icon from '@/components/wrappers/Icon'
 import { META_DATA } from '@/config/constants'
@@ -69,7 +71,7 @@ const UserDropdown = () => {
           <div className="d-lg-flex align-items-center gap-1 d-none">
             <span>
               <h5 className="my-0 lh-1 pro-username">{user?.name || user?.email || META_DATA.username}</h5>
-              <span className="fs-xs lh-1">{(user as any)?.role || 'User'}</span>
+              <span className="fs-xs lh-1">{session?.user?.role || 'User'}</span>
             </span>
             <Icon icon="chevron-down" className="align-middle" />
           </div>

@@ -2,13 +2,14 @@
   "name": "Dyvena",
   "version": "1.5.0",
   "description": "The dynamic vein of your business processes",
-  "author": "Coderthemes",
+  "author": "Ibnu Al Farezi",
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "format": "prettier --write './src/**/*.{ts,tsx,js,jsx}'"
+    "format": "prettier --write './src/**/*.{ts,tsx,js,jsx}'",
+    "db:cleanup": "bun run src/server/scripts/cleanup.ts"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
@@ -120,6 +121,8 @@
     "sweetalert2": "^11.26.24",
     "sweetalert2-react-content": "^5.1.2",
     "usehooks-ts": "^3.1.1",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0",
     "yet-another-react-lightbox": "^3.30.1",
     "yup": "^1.7.1",
     "zod": "^4.4.3",
